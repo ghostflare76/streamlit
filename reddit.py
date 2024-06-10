@@ -6,17 +6,6 @@ import streamlit as st
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import HumanMessage
 
-# 환경 변수 로드
-# from dotenv import load_dotenv
-# load_dotenv()
-
-# API 및 Reddit 정보 설정
-# GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-# REDDIT_USERNAME = os.getenv("REDDIT_USERNAME")
-# REDDIT_PASSWORD = os.getenv("REDDIT_PASSWORD")
-# REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID")
-# REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET")
-
 GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
 REDDIT_USERNAME = st.secrets["REDDIT_USERNAME"]
 REDDIT_PASSWORD = st.secrets["REDDIT_PASSWORD"]
@@ -107,7 +96,7 @@ def main():
     "Subreddit 채널명을 선택하세요",
     ("throneandliberty", "BattleCrush", "stellarblade"))
     
-    page_number = st.slider("리뷰 글 수를 입력하세요", 1, 100, 10)
+    page_number = st.slider("리뷰 글 수를 입력하세요", 1, 25, 10)
     
     st.write("글 수 : ", page_number)
     st.caption('글 수가 많은 경우 분석시 시간이 오래 걸립니다.')
