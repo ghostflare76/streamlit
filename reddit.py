@@ -3,10 +3,11 @@ import requests
 import pandas as pd
 import matplotlib.pyplot as plt
 import streamlit as st
+import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import HumanMessage
 
-# 환경 변수 로드
+# # 환경 변수 로드
 # from dotenv import load_dotenv
 # load_dotenv()
 
@@ -63,7 +64,7 @@ def get_new_posts(subreddit, page_number):
 
 @st.cache_resource
 def initialize_llm():
-    return ChatGoogleGenerativeAI(model="gemini-pro", google_api_key=GOOGLE_API_KEY)
+    return ChatGoogleGenerativeAI(model="gemini-1.5-flash-latest", google_api_key=GOOGLE_API_KEY)
 
 llm = initialize_llm()
 
@@ -80,9 +81,17 @@ def get_sentiment(text):
         return 'Neutral'
 
 def get_keyword(text):
-    prompt = HumanMessage(content=f"Extract negative keywords that matter from the given text: '{text}'. Return list them separated by commas.")
+    prompt = HumanMessage(content=f"Extract only important negative keywords from the given text: '{text}'. Returns a comma-separated list. Exclude values other than keywords.")
     response = llm([prompt])
     return response.content.strip().lower()   
+
+def summarize_text(text, game):    
+    prompt = HumanMessage(content=f"""{text}': 주어진 텍스트는 Reddit 에 올라간 {game} 기사글의 유저 리뷰이다. 
+            전체 주제를 포괄할수 있는 제목과 개요를 작성해주세요. 
+            주제에 대한 장문의 글에 대해 세부적이고 상호 배타적이며 전체 주제를 포괄하는 3개 이상의 소제목을 작성하고 소제목에 관련된 내용을  3~5문장으로 요약하세요.
+            마지막엔 결론이락 제목으로 핵심 요점을 요약하고 향후 전망을 제공합니다. 위 모든 내용을 한글로 작성해주세요""")
+    response = llm([prompt])
+    return response.content.strip().lower()  
 
 def process_post(post):
     text = post['selftext']
@@ -107,7 +116,7 @@ def main():
     "Subreddit 채널명을 선택하세요",
     ("throneandliberty", "BattleCrush", "stellarblade"))
     
-    page_number = st.slider("리뷰 글 수를 입력하세요", 1, 100, 10)
+    page_number = st.slider("리뷰 글 수를 입력하세요", 1, 25, 10)
     
     st.write("글 수 : ", page_number)
     st.caption('글 수가 많은 경우 분석시 시간이 오래 걸립니다.')
@@ -137,11 +146,12 @@ def main():
                 })
                 #st.write(df)
                 posts_with_sentiments = []
-                
+                all_text = ''
                 with st.spinner('리뷰글 감정 분석중...'):
                     for post in posts:
                         try:
                             post_with_sentiment = process_post(post['data'])
+                            all_text += post['data']['selftext'] + '\n'
                         except Exception as e:
                             print (f"An error occured : {e}")
                             continue
@@ -149,17 +159,21 @@ def main():
                         posts_with_sentiments.append(post_with_sentiment)
                 
                     processed_df = pd.DataFrame(posts_with_sentiments)
-
+                    body = summarize_text(all_text, subreddit)
                 st.success('분석 완료!')     
       
                 st.session_state.running = False
                 st.write(processed_df)
-             
+                
                 sentiment_counts = processed_df['sentiment'].value_counts()
 
                 fig, ax = plt.subplots()
                 ax.bar(sentiment_counts.index, sentiment_counts.values, color=['blue', 'green', 'red'])
                 st.pyplot(fig)
+                st.divider()
+                st.title('Reddit ' + subreddit + ' 리뷰 요약 보고서')
+                st.divider()
+                st.markdown(body)
 
                 # plt.title('Posts Sentiment Analysis')
                 # plt.xlabel('Sentiment')
