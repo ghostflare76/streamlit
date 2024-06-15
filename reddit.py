@@ -12,7 +12,7 @@ from langchain.schema import HumanMessage
 # from dotenv import load_dotenv
 # load_dotenv()
 
-# API 및 Reddit 정보 설정
+# #API 및 Reddit 정보 설정
 # GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 # REDDIT_USERNAME = os.getenv("REDDIT_USERNAME")
 # REDDIT_PASSWORD = os.getenv("REDDIT_PASSWORD")
@@ -116,7 +116,7 @@ def main():
 
     subreddit = st.selectbox(
     "Subreddit 채널명을 선택하세요",
-    ("throneandliberty", "BattleCrush", "stellarblade"))
+    ("throneandliberty", "BattleCrush", "stellarblade","LineRangers"))
     
     page_number = st.slider("리뷰 글 수를 입력하세요", 1, 25, 10)
     
