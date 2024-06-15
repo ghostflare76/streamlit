@@ -7,6 +7,7 @@ import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.schema import HumanMessage
 
+
 # # 환경 변수 로드
 # from dotenv import load_dotenv
 # load_dotenv()
@@ -17,6 +18,7 @@ from langchain.schema import HumanMessage
 # REDDIT_PASSWORD = os.getenv("REDDIT_PASSWORD")
 # REDDIT_CLIENT_ID = os.getenv("REDDIT_CLIENT_ID")
 # REDDIT_CLIENT_SECRET = os.getenv("REDDIT_CLIENT_SECRET")
+
 
 GOOGLE_API_KEY = st.secrets["GOOGLE_API_KEY"]
 REDDIT_USERNAME = st.secrets["REDDIT_USERNAME"]
