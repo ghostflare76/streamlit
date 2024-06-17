@@ -91,7 +91,7 @@ def summarize_text(text, game):
     prompt = HumanMessage(content=f"""{text}': 주어진 텍스트는 Reddit 에 올라간 {game} 기사글의 유저 리뷰이다. 
             전체 주제를 포괄할수 있는 제목과 개요를 작성해주세요. 
             주제에 대한 장문의 글에 대해 세부적이고 상호 배타적이며 전체 주제를 포괄하는 3개 이상의 소제목을 작성하고 소제목에 관련된 내용을  3~5문장으로 요약하세요.
-            마지막엔 결론이락 제목으로 핵심 요점을 요약하고 향후 전망을 제공합니다. 위 모든 내용을 한글로 작성해주세요""")
+            마지막엔 결론이란 제목으로 핵심 요점을 요약하고 유저 리뷰 근거하여 게임 개발사가 취해야할 행동을  제공합니다. 위 모든 내용을 한글로 작성해주세요""")
     response = llm([prompt])
     return response.content.strip().lower()  
 
@@ -149,7 +149,7 @@ def main():
                 #st.write(df)
                 posts_with_sentiments = []
                 all_text = ''
-                with st.spinner('리뷰글 감정 분석중...'):
+                with st.spinner('리뷰글 분석중...'):
                     for post in posts:
                         try:
                             post_with_sentiment = process_post(post['data'])
