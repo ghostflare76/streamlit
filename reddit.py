@@ -36,7 +36,6 @@ div[data-testid="stConnectionStatus"] {
 st.markdown(hide, unsafe_allow_html=True)
                 
 # Reddit 토큰 생성 함수
-@st.cache_data
 def get_access_token():
     token_url = f"https://www.reddit.com/api/v1/access_token?grant_type=password&username={REDDIT_USERNAME}&password={REDDIT_PASSWORD}"
     headers = {
@@ -64,7 +63,6 @@ def get_new_posts(subreddit, page_number):
         return None
     return response.json()
 
-@st.cache_resource
 def initialize_llm():
     return ChatGoogleGenerativeAI(model="gemini-1.5-flash-latest", google_api_key=GOOGLE_API_KEY)
 
